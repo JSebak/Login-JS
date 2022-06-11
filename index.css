@@ -1,0 +1,49 @@
+body{
+    background-color: rgb(177, 177, 177);
+}
+.section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+}
+.container{
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    width: 60%;
+    box-shadow: -10px 0px 13px -7px #000000, 10px 0px 13px -7px #000000, 14px 5px 15px 5px rgb(0 0 0 / 0%);
+    height: 600px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: stretch;
+}
+.registerForm{
+    align-self: center;
+}
+
+.inputForm{
+    height: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: rgb(151, 148, 148);
+    border: 2px;
+    border-radius: 8px;
+}
+input:focus{
+    background-color: white;
+    color: black;
+    border-color: rgb(9, 172, 9);
+}
+.formButton{
+    background-color: rgb(55, 211, 102);
+    color:rgb(0, 0, 0);
+    border-radius: 10px;
+    border:none
+}
+.formButton:hover{
+    background-color: rgb(3, 193, 60);
+    color: white;
+}
