@@ -7,14 +7,14 @@ const PasswordInput = (props) => {
     const [error, setError] = useState();
 
     const pattern = new RegExp(
-        "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[-+_!@#$%^&*.,?]).+$"
+        /^(\W[0-9][A-Z])|(.[0-9][A-Z]).*\W.*$/
       );
 
     const handleBlur = (event) => {
         const value = event.value
         if((value.length < props.length && !pattern.test(value))&&!props.passwordConfirmation)
         {
-            setError(`Password should be at least ${props.length} characters long, include a special character, a number and a Uppercase letter.`)
+            setError(`Password pass should have at least ${props.length} characters, include one special character, the second character must be a number and the third an uppercased letter.`)
         }
         else
         {
