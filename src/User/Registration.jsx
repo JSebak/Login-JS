@@ -1,4 +1,5 @@
 import {React,useState,useEffect} from "react"
+import { useNavigate } from 'react-router-dom';
 import { registerUser } from "./user.service";
 import TextInput from "../components/TextInput.jsx";
 import EmailInput from "../components/EmailInput.jsx";
@@ -8,6 +9,7 @@ import ErrorItem from "../components/ErrorItem/ErrorItem.jsx";
 
 const RegistrationComponent = () => {
     const [registered, setRegistered] = useState(false)
+    const [user, setUser] = useState({})
     const [formErrors, setFormErrors] = useState([])
     const [validForm, setValidForm] = useState(false);
     const [passwordCoincide, setPasswordCoincide] = useState("");
@@ -17,23 +19,14 @@ const RegistrationComponent = () => {
     const [password, setPassword] = useState("")
     const [phone, setPhone] = useState("")
     const [idNumber, setIdNumber] = useState("")
-    
-    let user = {
-        first_name: firstName,
-        last_name: lastName,
-        email: email,
-        password:password,
-        phone_number:phone,
-        id:idNumber
-    }
+    const required = ["firstName","lastName","email","password","phone","id"]
+    let navigate = useNavigate();
 
     useEffect(() => {
-      let valid = ((firstName !== "" && lastName !== "" 
-                    && email !== "" && password !== "" 
-                    && phone !== "" && idNumber !== "") 
+      let valid = (required.some(key=> user[key] !== "") 
                     && passwordCoincide === undefined);
       setValidForm(valid)
-    }, [firstName, lastName, email, password, phone, idNumber, passwordCoincide])
+    }, [user, passwordCoincide])
     
     const getData = (event) => {
 
@@ -43,50 +36,87 @@ const RegistrationComponent = () => {
     }
 
     const register = () => {
-        registerUser(user).then(result => {
-            // if (result.state === 201)
-            // {
-            //     setRegistered(true);
-            //     console.log(result.result)
-            // }
-            // else 
-            // {
-                const errors = result.map(error => Object.values(error.constraints))
+
+        registerUser(user)
+            .then(result =>
+            {
+                console.log("success",result);
+                navigate("/success-user");
+            })
+            .catch((errors => {
+                console.log("errors", errors)
                 setFormErrors(errors)
-            // }
-        })
+            }))
+            .finally(()=>{
+                //change loading state
+            })
+        //Mixed
+        // registerUser(user).then(result => {
+        //     if (result.state === 201)
+        //     {
+        //         setRegistered(true);
+        //         console.log(result.result)
+        //     }
+        //     else 
+        //     {
+        //         const errors = result.result.map(error => 
+        //         {
+        //             return {field: error.property,
+        //             errors: Object.values(error.constraints)}
+        //         })
+        //         setFormErrors(errors)
+        //     }
+        // })
     }
+
+    // const handleErrors = (errors) => {
+    //     errors.map(error => {
+    //         switch (error.field) {
+    //             case "id":
+    //                 set
+    //                 break;
+
+    //         }
+    //     })
+    // }
 
     const handleBlur = (event) => {
         if(event)
         {
-            const id = event.id.replace("Input","")
+            const id = event.id
             const value = event.value
-            switch (id) {
-                case "firstName":
-                    setFirstName(value);
-                break;
 
-                case "lastName":
-                    setLastName(value)
-                break;
-
-                case "email":
-                    setEmail(value)
-                break;
-
-                case "password":
-                    setPassword(value)
-                break;
-
-                case "phone":
-                    setPhone(value)
-                break;
-
-                case "id":
-                    setIdNumber(value)
-                break;
+            const editedUser = {
+                ...user,
+                [id]: value
             }
+            setUser(editedUser)
+            
+            // switch (id) {
+            //     case "firstName":
+            //         setFirstName(value);
+            //     break;
+
+            //     case "lastName":
+            //         setLastName(value)
+            //     break;
+
+            //     case "email":
+            //         setEmail(value)
+            //     break;
+
+            //     case "password":
+            //         setPassword(value)
+            //     break;
+
+            //     case "phone":
+            //         setPhone(value)
+            //     break;
+
+            //     case "id":
+            //         setIdNumber(value)
+            //     break;
+            // }
         }
         else
         {
@@ -105,14 +135,18 @@ const RegistrationComponent = () => {
         }
     }
 
+    const showError = (field) =>{
+        const element = formErrors.find(item => item.property === field);
+        if(!element)
+        {
+            return;
+        }
+        return Object.values(element.constraints).join(", ");
+    }
+
     const back = (event) => {
         setRegistered(false)
-        setFirstName("")
-        setLastName("")
-        setEmail("")
-        setPassword("")
-        setPhone("")
-        setIdNumber("")
+        setUser({})
     }
 
     return (
@@ -135,17 +169,19 @@ const RegistrationComponent = () => {
                 </span>  
             </h1>
             <form id="registerForm" action="none">
-                <TextInput handleBlur={handleBlur} id="firstNameInput" placeholder="First Name" name="first name" length={3}></TextInput>
-                <TextInput handleBlur={handleBlur} id="lastNameInput" placeholder="Last Name" name="last name" length={3}></TextInput>
-                <EmailInput handleBlur={handleBlur} id="emailInput"></EmailInput>
-                <PasswordInput handleBlur={handleBlur} id="passwordInput" placeholder="Password" length={8} passwordConfirmation = {false}></PasswordInput>
-                <PasswordInput handleBlur={verifyPassword} id="confirmationInput" placeholder="Confirm your Password" length={8} passwordConfirmation = {true}></PasswordInput>
-                <ErrorItem id="confirmationInputError" error={passwordCoincide}></ErrorItem>
-                <NumberInput handleBlur={handleBlur} id="phoneInput" placeholder="Phone" length={10} ></NumberInput>
-                <NumberInput handleBlur={handleBlur} id="idInput" placeholder="Id Number" length={10} ></NumberInput>
+                <TextInput handleBlur={handleBlur} id="firstName" placeholder="First Name" name="first name" length={3}></TextInput>
+                <ErrorItem id="confirmationError" error={showError("first_name")}></ErrorItem>
+                <TextInput handleBlur={handleBlur} id="lastName" placeholder="Last Name" name="last name" length={3}></TextInput>
+                <ErrorItem id="confirmationError" error={showError("lastName")}></ErrorItem>
+                <EmailInput handleBlur={handleBlur} id="email"></EmailInput>
+                <PasswordInput handleBlur={handleBlur} id="password" placeholder="Password" length={8} passwordConfirmation = {false}></PasswordInput>
+                <PasswordInput handleBlur={verifyPassword} id="confirmation" placeholder="Confirm your Password" length={8} passwordConfirmation = {true}></PasswordInput>
+                <ErrorItem id="confirmationError" error={passwordCoincide}></ErrorItem>
+                <NumberInput handleBlur={handleBlur} id="phone" placeholder="Phone" length={10} ></NumberInput>
+                <NumberInput handleBlur={handleBlur} id="id" placeholder="Id Number" length={10} ></NumberInput>
             </form>
             <button id="registerButton" className="formButton" type="button" disabled={!validForm} onClick={register}>Register</button>
-            {formErrors.map((error, index)=> <ErrorItem id={index} error={error}></ErrorItem>)}
+            {/* {formErrors.map((error, index)=> <ErrorItem id={index} error={error}></ErrorItem>)} */}
         </div>
         }
         </div>
