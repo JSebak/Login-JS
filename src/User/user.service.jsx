@@ -1,4 +1,5 @@
 const _url= "http://localhost:3000"
+// const _url = "http://192.168.1.8:3000"
 const endpoint = "/users"
 
 export async function getUsers(){

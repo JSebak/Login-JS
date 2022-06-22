@@ -18,7 +18,7 @@ root.render(
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="singup" element={<RegistrationComponent />} />
-      <Route path="success-user" element={<Succes></Succes>} />
+      <Route path="success-user" element={<Succes/>} />
     </Routes>
     </React.StrictMode>
   </BrowserRouter>

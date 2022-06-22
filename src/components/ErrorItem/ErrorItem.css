@@ -1,9 +1,10 @@
 .errorItem{
-    width: 20%;
     FONT-WEIGHT: 300;
     color: white;
     background-color: rgb(235 0 0 / 73%);
-    border-radius: 10px;
+    border-radius: 8px;
     border: none;
-    align-self: center;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: center;
 }

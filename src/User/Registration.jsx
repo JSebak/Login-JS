@@ -6,36 +6,36 @@ import EmailInput from "../components/EmailInput.jsx";
 import PasswordInput from "../components/PasswordInput.jsx"
 import NumberInput from "../components/NumberInput.jsx";
 import ErrorItem from "../components/ErrorItem/ErrorItem.jsx";
+import "./Registration.css"
 
 const RegistrationComponent = () => {
     const [registered, setRegistered] = useState(false)
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState({
+        firstName:'',
+        lastName:'',
+        email:'',
+        password:'',
+        phone:'',
+        id:''
+    })
     const [formErrors, setFormErrors] = useState([])
     const [validForm, setValidForm] = useState(false);
     const [passwordCoincide, setPasswordCoincide] = useState("");
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [phone, setPhone] = useState("")
-    const [idNumber, setIdNumber] = useState("")
     const required = ["firstName","lastName","email","password","phone","id"]
     let navigate = useNavigate();
 
     useEffect(() => {
-      let valid = (required.some(key=> user[key] !== "") 
+      let valid = (required.every(key=> user[key] !== "") 
                     && passwordCoincide === undefined);
       setValidForm(valid)
     }, [user, passwordCoincide])
-    
-    const getData = (event) => {
-
-        const user = {
-
-        }
-    }
 
     const register = () => {
+        // const mock = [
+        // {"target":{"id":"1094945667","email":"seb-zab@hotmail.com","first_name":"Juan","last_name":"Gaitan","password":"p4S$word","phone_number":"3217103928"},"value":"1094945667","property":"id","children":[],"constraints":{"isIdAlreadyExist":"Id 1094945667 already exists."}},
+        // {"target":{"id":"1094945667","email":"seb-zab@hotmail.com","first_name":"Juan","last_name":"Gaitan","password":"p4S$word","phone_number":"3217103928"},"value":"seb-zab@hotmail.com","property":"email","children":[],"constraints":{"isEmailAlreadyExist":"Email seb-zab@hotmail.com already exists. Choose another email."}}
+        // ]
+        // setFormErrors(mock);
 
         registerUser(user)
             .then(result =>
@@ -50,6 +50,8 @@ const RegistrationComponent = () => {
             .finally(()=>{
                 //change loading state
             })
+
+
         //Mixed
         // registerUser(user).then(result => {
         //     if (result.state === 201)
@@ -68,17 +70,6 @@ const RegistrationComponent = () => {
         //     }
         // })
     }
-
-    // const handleErrors = (errors) => {
-    //     errors.map(error => {
-    //         switch (error.field) {
-    //             case "id":
-    //                 set
-    //                 break;
-
-    //         }
-    //     })
-    // }
 
     const handleBlur = (event) => {
         if(event)
@@ -127,7 +118,7 @@ const RegistrationComponent = () => {
     const verifyPassword = (event) => {
         if(user.password == null || user.password !== event.value)
         {
-            setPasswordCoincide("The password should match.")
+            setPasswordCoincide("The passwords should match.")
         }
         else
         {
@@ -135,33 +126,8 @@ const RegistrationComponent = () => {
         }
     }
 
-    const showError = (field) =>{
-        const element = formErrors.find(item => item.property === field);
-        if(!element)
-        {
-            return;
-        }
-        return Object.values(element.constraints).join(", ");
-    }
-
-    const back = (event) => {
-        setRegistered(false)
-        setUser({})
-    }
 
     return (
-        <div>
-            { registered  &&
-            <div> 
-                <h2>
-                    User Registered!
-                </h2>
-                <button onClick={back}>
-                    Back
-                </button>
-            </div>
-        }
-        {!registered && 
         <div className="container">  
             <h1 className="title">
                 <span>
@@ -169,22 +135,18 @@ const RegistrationComponent = () => {
                 </span>  
             </h1>
             <form id="registerForm" action="none">
-                <TextInput handleBlur={handleBlur} id="firstName" placeholder="First Name" name="first name" length={3}></TextInput>
-                <ErrorItem id="confirmationError" error={showError("first_name")}></ErrorItem>
-                <TextInput handleBlur={handleBlur} id="lastName" placeholder="Last Name" name="last name" length={3}></TextInput>
-                <ErrorItem id="confirmationError" error={showError("lastName")}></ErrorItem>
-                <EmailInput handleBlur={handleBlur} id="email"></EmailInput>
-                <PasswordInput handleBlur={handleBlur} id="password" placeholder="Password" length={8} passwordConfirmation = {false}></PasswordInput>
-                <PasswordInput handleBlur={verifyPassword} id="confirmation" placeholder="Confirm your Password" length={8} passwordConfirmation = {true}></PasswordInput>
+                <TextInput handleBlur={handleBlur} id="firstName" placeholder="First Name" name="first name" errors={formErrors} length={3}></TextInput>
+                <TextInput handleBlur={handleBlur} id="lastName" placeholder="Last Name" name="last name" errors={formErrors} length={3}></TextInput>
+                <EmailInput handleBlur={handleBlur} id="email" errors={formErrors} ></EmailInput>
+                <PasswordInput handleBlur={handleBlur} id="password" placeholder="Password" length={8} passwordConfirmation = {false} errors={formErrors} ></PasswordInput>
+                <PasswordInput handleBlur={verifyPassword} id="confirmation" placeholder="Confirm your Password" length={8} errors={formErrors} passwordConfirmation = {true}></PasswordInput>
                 <ErrorItem id="confirmationError" error={passwordCoincide}></ErrorItem>
-                <NumberInput handleBlur={handleBlur} id="phone" placeholder="Phone" length={10} ></NumberInput>
-                <NumberInput handleBlur={handleBlur} id="id" placeholder="Id Number" length={10} ></NumberInput>
+                <NumberInput handleBlur={handleBlur} id="phone" placeholder="Phone" length={10} errors={formErrors} ></NumberInput>
+                <NumberInput handleBlur={handleBlur} id="id" placeholder="Id Number" length={10} errors={formErrors} ></NumberInput>
             </form>
             <button id="registerButton" className="formButton" type="button" disabled={!validForm} onClick={register}>Register</button>
-            {/* {formErrors.map((error, index)=> <ErrorItem id={index} error={error}></ErrorItem>)} */}
         </div>
-        }
-        </div>
+
     );
 }
 export default RegistrationComponent;

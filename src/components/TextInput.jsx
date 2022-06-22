@@ -1,5 +1,6 @@
 import Input from "./Input/Input";
 import { useState } from "react";
+import "./TypedInput.css";
 import "./ErrorItem/ErrorItem.css";
 import ErrorItem from "./ErrorItem/ErrorItem";
 
@@ -24,7 +25,7 @@ const TextInput = (props) => {
             id={props.id}
             handleBlur={handleBlur}
             ></Input>
-            <ErrorItem id={`${props.id}Error`} error={error}></ErrorItem>
+            <ErrorItem id={`${props.id}Error`} error={error} errors = {props.errors}></ErrorItem>
         </div>
     );
 }

@@ -1,6 +1,7 @@
 import Input from "./Input/Input";
 import { useState } from "react";
 import "./ErrorItem/ErrorItem.css";
+import "./TypedInput.css";
 import ErrorItem from "./ErrorItem/ErrorItem";
 
 const PasswordInput = (props) => {
@@ -29,7 +30,7 @@ const PasswordInput = (props) => {
             id={props.id}
             handleBlur={handleBlur}
             ></Input>
-            <ErrorItem id={`${props.id}Error`} error={error}></ErrorItem>
+            <ErrorItem id={`${props.id}Error`} error={error} errors = {props.errors}></ErrorItem>
         </div>
     );
 }

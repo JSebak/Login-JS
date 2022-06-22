@@ -1,10 +1,13 @@
 import { useState } from "react";
 import ErrorItem from "./ErrorItem/ErrorItem";
 import Input from "./Input/Input";
+import "./TypedInput.css";
+
 
 
 const EmailInput = (props) => {
     const [error, setError] = useState()
+
     const handleBlur = (event) => {
         const value = event.value
         if(!(value.includes("@") && value.includes(".") && value.length > 5))
@@ -24,7 +27,7 @@ const EmailInput = (props) => {
             id={props.id}
             handleBlur={handleBlur}
             ></Input>
-            <ErrorItem id={`${props.id}Error`} error={error}></ErrorItem>
+            <ErrorItem id={`${props.id}Error`} error={error} errors = {props.errors}></ErrorItem>
         </div>
     );
 }

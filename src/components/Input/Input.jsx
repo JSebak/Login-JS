@@ -3,7 +3,7 @@ import ErrorItem from "../ErrorItem/ErrorItem";
 import "./Input.css";
 
 const Input = (props) => {
-    const [error, setError] = useState()
+    const [error, setError] = useState([])  
 
     const handleBlur = (event) => {
         const value = event.target.value
