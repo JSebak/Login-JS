@@ -32,7 +32,7 @@ export async function registerUser(user){
   )
   const body = await response.json()
 
-  if(response.ok)
+  if(response.status === 201)
   {
     return body;
   }
